@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+    <meta property="og:title" content="In-Context Sync-LoRA for Portrait Video Editing"/>
+    <meta property="og:description" content="In-Context Sync-LoRA for Portrait Video Editing"/>
+    <meta property="og:url" content=""/>
+    <meta property="og:type" content="website"/>
+    <meta name="description" content="In-Context Sync-LoRA for Portrait Video Editing">
+  <meta name="keywords" content="Video Generation, Diffusion Models">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="./assets/logo.png">
+    
+  <title>Sync-LoRA</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  
+  <style>
+    /* Soft pastel pink color scheme */
+    :root {
+      --pink-light: #fff5f7;
+      --pink-medium: #ffecf0;
+    }
+    
+    /* Override white sections with light pink */
+    body {
+      background-color: var(--pink-light);
+    }
+    
+    .section {
+      background-color: var(--pink-light);
+    }
+    
+    /* Override gray/is-light sections with deeper pink */
+    .hero.is-light,
+    .section.hero.is-light {
+      background-color: var(--pink-medium);
+    }
+    
+    /* Keep header sections clean */
+    .publication-header,
+    .publication-author-block {
+      background-color: var(--pink-light);
+    }
+  </style>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<section class="publication-header">
+    <div class="hero-body" style="padding-bottom: 1rem;">
+        <div class="container is-max-widescreen">
+            <div class="column has-text-centered">
+                <h1 class="title is-1 publication-title">In-Context Sync-LoRA for Portrait Video Editing</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="publication-author-block">
+    <div class="hero-body" style="padding-top: 0rem;">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+                <div class="column has-text-centered">
+                    <div class="is-size-5 publication-authors">
+                        <span class="author-block"><a href="https://sagipolaczek.github.io" target="_blank" style="color: inherit;">Sagi Polaczek</a><sup>1</sup></span>
+                        <span class="author-block" style="margin-left: 2rem;"><a href="https://orpatashnik.github.io" target="_blank" style="color: inherit;">Or Patashnik</a><sup>1</sup></span>
+                        <span class="author-block" style="margin-left: 2rem;"><a href="https://arash-mham.github.io" target="_blank" style="color: inherit;">Ali Mahdavi-Amiri</a><sup>2</sup></span>
+                        <span class="author-block" style="margin-left: 2rem;"><a href="https://danielcohenor.com" target="_blank" style="color: inherit;">Daniel Cohen-Or</a><sup>1</sup></span>
+                    </div>
+                    <div class="is-size-6 publication-authors" style="margin-top: 0.5rem;">
+                        <span class="author-block"><sup>1</sup>Tel Aviv University</span>
+                        <span class="author-block" style="margin-left: 2rem;"><sup>2</sup>Simon Fraser University</span>
+                    </div>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <span class="link-block">
+                            <a href="http://arxiv.org/abs/2512.03013" target="_blank"
+                            class="external-link button is-normal is-rounded">
+                            <span class="icon">
+                                <i class="ai ai-arxiv"></i>
+                            </span>
+                            <span>arXiv</span>
+                            </a>
+                        </span>
+                        <span class="link-block">
+                            <a class="external-link button is-normal is-rounded is-disabled" href="https://github.com/SagiPolaczek/Sync-LoRA">
+                                <span class="icon">
+                                    <i class="fab fa-github"></i>
+                                </span>
+                                <span>Code</span>
+                            </a>
+                        </span>
+                        <span class="link-block">
+                            <a class="external-link button is-normal is-rounded is-disabled" href="https://huggingface.co/SagiPolaczek" target="_blank">
+                                <span class="icon">
+                                    <img src="./assets/hf-logo.svg" alt="HF" style="height: 1.2em;">
+                                </span>
+                                <span>Weights (TBD)</span>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- More Results Section -->
+<section class="hero is-small is-light">
+    <div class="hero-body">
+    <div class="container is-max-widescreen">
+            <h2 class="title is-3 has-text-centered">Diverse editing capabilities with Sync-LoRA</h2>
+            
+            <div id="more-diverse-carousel" class="carousel results-carousel" style="margin-top: 2rem;">
+                <!-- Slide 1: 3x3 grid -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/batman.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/color_hair_to_black.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/mask_girl.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/forehead_jewelary.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/gangster.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/the_rock_lipstick.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/girl_mic_2.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/gray_to_color.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/trump_dancing_again.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <!-- Slide 2: 3x3 grid -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/jordan_suit_2.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/lisa_yellow.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/louis_vitton.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/elon_beard.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/mask_guy.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/remove_coat.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/girl_mic_1.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/trump.mp4" type="video/mp4">
+                        </video>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                            <source src="./assets/results_more/jordan_suit_1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+      </div>
+    </div>
+</section>
+
+<!-- Abstract Section -->
+<section class="section">
+    <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Abstract</h2>
+        <div class="content has-text-justified">
+            <p>
+                Editing portrait videos is a challenging task that requires flexible yet precise control over a wide range of modifications, such as appearance changes, expression edits, or the addition of objects. The key difficulty lies in preserving the subject's original temporal behavior, demanding that every edited frame remains precisely synchronized with the corresponding source frame. We present Sync-LoRA, a method for editing portrait videos that achieves high-quality visual modifications while maintaining frame-accurate synchronization and identity consistency. Our approach uses an image-to-video diffusion model, where the edit is defined by modifying the first frame and then propagated to the entire sequence. To enable accurate synchronization, we train an in-context LoRA using paired videos that depict identical motion trajectories but differ in appearance. These pairs are automatically generated and curated through a synchronization-based filtering process that selects only the most temporally aligned examples for training. This training setup teaches the model to combine motion cues from the source video with the visual changes introduced in the edited first frame. Trained on a compact, highly curated set of synchronized human portraits, Sync-LoRA generalizes to unseen identities and diverse edits (e.g., modifying appearance, adding objects, or changing backgrounds), robustly handling variations in pose and expression. Our results demonstrate high visual fidelity and strong temporal coherence, achieving a robust balance between edit fidelity and precise motion preservation.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- One-to-Many Section -->
+<section class="hero is-small is-light">
+    <div class="hero-body">
+    <div class="container is-max-widescreen">
+            <h2 class="title is-3 has-text-centered">One-to-Many</h2>
+            
+            <!-- Carousel -->
+            <div id="one-to-many-carousel" class="carousel results-carousel" style="margin-top: 2rem;">
+                <!-- Wolf -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: flex; margin-bottom: 0.3rem; justify-content: center; font-size: 0.9em; color: #666;">
+                        <div style="width: 24.5%;"></div>
+                        <div style="width: 1.5%;"></div>
+                        <div style="width: 74%; display: flex;">
+                            <span style="flex: 1; text-align: center;">+ hat</span>
+                            <span style="flex: 1; text-align: center;">- jacket</span>
+                            <span style="flex: 1; text-align: center;">+ glasses</span>
+                        </div>
+                    </div>
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/results_concat/wolf_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <!-- Ginger Beard -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: flex; margin-bottom: 0.3rem; justify-content: center; font-size: 0.9em; color: #666;">
+                        <div style="width: 24.5%;"></div>
+                        <div style="width: 1.5%;"></div>
+                        <div style="width: 74%; display: flex;">
+                            <span style="flex: 1; text-align: center;">+ bandana</span>
+                            <span style="flex: 1; text-align: center;">+ wildfire</span>
+                            <span style="flex: 1; text-align: center;">± sunglasses on the face</span>
+                        </div>
+                    </div>
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/results_concat/ginger_beard_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <!-- Brad -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: flex; margin-bottom: 0.3rem; justify-content: center; font-size: 0.9em; color: #666;">
+                        <div style="width: 24.5%;"></div>
+                        <div style="width: 1.5%;"></div>
+                        <div style="width: 74%; display: flex;">
+                            <span style="flex: 1; text-align: center;">- hat</span>
+                            <span style="flex: 1; text-align: center;">± blue hat</span>
+                            <span style="flex: 1; text-align: center;">± pink hat</span>
+                        </div>
+                    </div>
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/results_concat/brad_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <!-- Bill -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: flex; margin-bottom: 0.3rem; justify-content: center; font-size: 0.9em; color: #666;">
+                        <div style="width: 24.5%;"></div>
+                        <div style="width: 1.5%;"></div>
+                        <div style="width: 74%; display: flex;">
+                            <span style="flex: 1; text-align: center;">+ stylish hair and mustache</span>
+                            <span style="flex: 1; text-align: center;">+ pink headband</span>
+                            <span style="flex: 1; text-align: center;">± red glasses</span>
+                        </div>
+                    </div>
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/results_concat/bill_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <!-- Breaking Bad -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: flex; margin-bottom: 0.3rem; justify-content: center; font-size: 0.9em; color: #666;">
+                        <div style="width: 24.5%;"></div>
+                        <div style="width: 1.5%;"></div>
+                        <div style="width: 74%; display: flex;">
+                            <span style="flex: 1; text-align: center;">+ hat</span>
+                            <span style="flex: 1; text-align: center;">± t-shirt</span>
+                            <span style="flex: 1; text-align: center;">± red tie</span>
+                        </div>
+                    </div>
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/results_concat/breakingbad_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <!-- Clooney -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: flex; margin-bottom: 0.3rem; justify-content: center; font-size: 0.9em; color: #666;">
+                        <div style="width: 24.5%;"></div>
+                        <div style="width: 1.5%;"></div>
+                        <div style="width: 74%; display: flex;">
+                            <span style="flex: 1; text-align: center;">+ cross earring</span>
+                            <span style="flex: 1; text-align: center;">+ glasses</span>
+                            <span style="flex: 1; text-align: center;">± blonde hair</span>
+                        </div>
+                    </div>
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/results_concat/clooney_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <!-- Jaden -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: flex; margin-bottom: 0.3rem; justify-content: center; font-size: 0.9em; color: #666;">
+                        <div style="width: 24.5%;"></div>
+                        <div style="width: 1.5%;"></div>
+                        <div style="width: 74%; display: flex;">
+                            <span style="flex: 1; text-align: center;">+ spotlight</span>
+                            <span style="flex: 1; text-align: center;">+ headset</span>
+                            <span style="flex: 1; text-align: center;">+ bandana</span>
+                        </div>
+                    </div>
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/results_concat/jaden_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <!-- Joe -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: flex; margin-bottom: 0.3rem; justify-content: center; font-size: 0.9em; color: #666;">
+                        <div style="width: 24.5%;"></div>
+                        <div style="width: 1.5%;"></div>
+                        <div style="width: 74%; display: flex;">
+                            <span style="flex: 1; text-align: center;">- mic and headset</span>
+                            <span style="flex: 1; text-align: center;">+ cowboy hat</span>
+                            <span style="flex: 1; text-align: center;">+ beard</span>
+                        </div>
+                    </div>
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/results_concat/joe_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <!-- Liam -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: flex; margin-bottom: 0.3rem; justify-content: center; font-size: 0.9em; color: #666;">
+                        <div style="width: 24.5%;"></div>
+                        <div style="width: 1.5%;"></div>
+                        <div style="width: 74%; display: flex;">
+                            <span style="flex: 1; text-align: center;">+ nike hat</span>
+                            <span style="flex: 1; text-align: center;">± mullet</span>
+                            <span style="flex: 1; text-align: center;">+ clown nose</span>
+                        </div>
+                    </div>
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/results_concat/liam_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <!-- Alicia -->
+                <div class="column is-centered has-text-centered">
+                    <div style="display: flex; margin-bottom: 0.3rem; justify-content: center; font-size: 0.9em; color: #666;">
+                        <div style="width: 24.5%;"></div>
+                        <div style="width: 1.5%;"></div>
+                        <div style="width: 74%; display: flex;">
+                            <span style="flex: 1; text-align: center;">+ leopard coat</span>
+                            <span style="flex: 1; text-align: center;">+ pink furry coat</span>
+                            <span style="flex: 1; text-align: center;">+ glasses</span>
+                        </div>
+                    </div>
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/results_concat/alicia_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+    </div>
+  </div>
+</section>
+
+<!-- Comparisons Section -->
+<section class="section hero is-small">
+    <div class="hero-body">
+        <div class="container is-max-widescreen">
+            <h2 class="title is-3 has-text-centered" style="margin-bottom: 0.3rem;">Comparisons</h2>
+            <p style="text-align: center; font-size: 0.85em; color: #888; margin-bottom: 0.2rem;">Source ↑ &nbsp;&nbsp; ↓ Edited</p>
+            <p style="text-align: center; font-size: 0.8em; margin-bottom: 1.2rem;">Border colors highlight: <span style="color: #ff0000;">■</span> out of sync with source &nbsp;&nbsp; <span style="color: #ffa500;">■</span> failed to apply edit</p>
+            
+            <!-- Column labels -->
+            <div style="display: flex; justify-content: center; margin-bottom: 0.5rem;">
+                <div style="width: 90%; max-width: 1200px; display: flex;">
+                    <div style="width: 20%; text-align: center; font-size: 0.9em; font-weight: 500;">LucyEdit</div>
+                    <div style="width: 20%; text-align: center; font-size: 0.9em; font-weight: 500;">VACE</div>
+                    <div style="width: 20%; text-align: center; font-size: 0.9em; font-weight: 500;">AnyV2V</div>
+                    <div style="width: 20%; text-align: center; font-size: 0.9em; font-weight: 500;">FlowEdit</div>
+                    <div style="width: 20%; text-align: center; font-size: 0.9em; font-weight: bold;">Sync-LoRA</div>
+                </div>
+            </div>
+            
+            <!-- Carousel -->
+            <div id="comparisons-carousel" class="carousel results-carousel">
+                <div class="column is-centered has-text-centered">
+                    <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ stylish hair and mustache"</p>
+                    <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                        <source src="./assets/compare/edits/stylish_hair_and_mustache_bordered.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ red hat"</p>
+                    <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                        <source src="./assets/compare/edits/red_hat_bordered.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ blonde hair"</p>
+                    <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                        <source src="./assets/compare/edits/blonde_bordered.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ wildfire"</p>
+                    <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                        <source src="./assets/compare/edits/wildfire_bordered.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ yellow shirt"</p>
+                    <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                        <source src="./assets/compare/edits/yellow_shirt_bordered.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ lipstick"</p>
+                    <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                        <source src="./assets/compare/edits/lipstick_bordered.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"- hat"</p>
+                    <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                        <source src="./assets/compare/edits/remove_hat_bordered.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ spotlight"</p>
+                    <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                        <source src="./assets/compare/edits/spotlight_bordered.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ joker makeup"</p>
+                    <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                        <source src="./assets/compare/edits/joker_bordered.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ leopard coat"</p>
+                    <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                        <source src="./assets/compare/edits/leopard_coat_bordered.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Experiment Section -->
+<section class="section hero is-light">
+    <div class="hero-body">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3 has-text-centered">Data Generation and Curation Visualization</h2>
+            <h3 id="experimentSubtitle" class="subtitle is-4 has-text-centered" style="margin-top: 0.5rem; margin-bottom: 2rem; font-size: 1.5rem; transition: opacity 0.5s ease-in-out;">Stage 1: Generation</h3>
+            <div style="margin-top: 3rem; display: flex; align-items: center; gap: 3rem; justify-content: center; position: relative; min-height: 500px;">
+                <!-- Box containing animation -->
+                <div id="imageBox" style="border: 2px solid #ddd; border-radius: 12px; padding: 2rem; background-color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: opacity 0.8s ease-out;">
+                    <div style="display: flex; align-items: center; justify-content: flex-start; flex-wrap: nowrap;">
+                        <!-- First Image -->
+                        <div class="anim-image" id="image1" style="opacity: 0; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); height: 200px; display: flex; align-items: center;">
+                            <img src="./assets/data_generation_and_curation/left.png" alt="Left" style="max-width: 200px; height: 200px; width: auto; border-radius: 8px; display: block; object-fit: contain;">
+                        </div>
+                        
+                        <!-- Arrow 1 -->
+                        <div class="anim-arrow" id="arrow1" style="opacity: 0; margin: 0 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="font-size: 0.85em; color: #666; margin-bottom: 0.3rem; white-space: nowrap;">image editing</div>
+                            <svg width="80" height="40" viewBox="0 0 80 40">
+                                <defs>
+                                    <marker id="arrowhead1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                        <polygon points="0 0, 10 3, 0 6" fill="#000000" />
+                                    </marker>
+                                </defs>
+                                <line x1="0" y1="20" x2="70" y2="20" stroke="#000000" stroke-width="3" marker-end="url(#arrowhead1)" />
+                            </svg>
+                        </div>
+                        
+                        <!-- Second Image -->
+                        <div class="anim-image" id="image2" style="opacity: 0; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); height: 200px; display: flex; align-items: center;">
+                            <img src="./assets/data_generation_and_curation/right.png" alt="Right" style="max-width: 200px; height: 200px; width: auto; border-radius: 8px; display: block; object-fit: contain;">
+                        </div>
+                        
+                        <!-- Arrow 2 -->
+                        <div class="anim-arrow" id="arrow2" style="opacity: 0; margin: 0 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="font-size: 0.85em; color: #666; margin-bottom: 0.3rem; white-space: nowrap;">image to video</div>
+                            <svg width="80" height="40" viewBox="0 0 80 40">
+                                <defs>
+                                    <marker id="arrowhead2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                        <polygon points="0 0, 10 3, 0 6" fill="#000000" />
+                                    </marker>
+                                </defs>
+                                <line x1="0" y1="20" x2="70" y2="20" stroke="#000000" stroke-width="3" marker-end="url(#arrowhead2)" />
+                            </svg>
+                        </div>
+                        
+                        <!-- Third Video -->
+                        <div class="anim-image" id="image3" style="opacity: 0; height: 200px; display: flex; align-items: center;">
+                            <video poster="" autoplay muted loop playsinline style="max-width: 400px; height: 200px; width: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); object-fit: contain;">
+                                <source src="./assets/data_generation_and_curation/paired_video.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Graph -->
+                <div id="graph" style="opacity: 0; transition: opacity 1s ease-out, transform 1s ease-in-out;">
+                    <div style="border: 2px solid #ddd; border-radius: 12px; padding: 2rem; background-color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center;">
+                        <div style="font-size: 3em; font-weight: bold; color: #dc3232; margin-bottom: 1rem;">
+                            <span id="counter">0</span>
+                        </div>
+                        <svg id="pointsCanvas" width="250" height="250" viewBox="0 0 250 250" style="border: 1px solid #eee; border-radius: 8px; background-color: #fafafa;">
+                            <!-- Points will be added here dynamically -->
+                        </svg>
+                        <div style="margin-top: 1rem; font-size: 0.9em; color: #666;">
+                            Paired Videos
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Four corner videos -->
+                <div id="cornerImage1" style="position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.8s ease-out; text-align: center;">
+                    <video id="video1" poster="" muted loop playsinline style="max-width: 200px; max-height: 200px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        <source src="./assets/data_generation_and_curation/pose.mp4" type="video/mp4">
+                    </video>
+                    <div style="margin-top: 0.5rem; font-size: 0.9em; font-weight: 500; color: #333;">pose</div>
+                </div>
+                <div id="cornerImage2" style="position: absolute; bottom: 0; left: 0; opacity: 0; transition: opacity 0.8s ease-out; text-align: center; transform: translateY(0);">
+                    <video id="video2" poster="" muted loop playsinline style="max-width: 200px; max-height: 200px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        <source src="./assets/data_generation_and_curation/mouth.mp4" type="video/mp4">
+                    </video>
+                    <div style="margin-top: 0.5rem; font-size: 0.9em; font-weight: 500; color: #333;">mouth</div>
+                </div>
+                <div id="cornerImage3" style="position: absolute; top: 0; right: 0; opacity: 0; transition: opacity 0.8s ease-out; text-align: center;">
+                    <video id="video3" poster="" muted loop playsinline style="max-width: 200px; max-height: 200px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        <source src="./assets/data_generation_and_curation/gaze.mp4" type="video/mp4">
+                    </video>
+                    <div style="margin-top: 0.5rem; font-size: 0.9em; font-weight: 500; color: #333;">gaze</div>
+                </div>
+                <div id="cornerImage4" style="position: absolute; bottom: 0; right: 0; opacity: 0; transition: opacity 0.8s ease-out; text-align: center; transform: translateY(0);">
+                    <video id="video4" poster="" muted loop playsinline style="max-width: 200px; max-height: 200px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        <source src="./assets/data_generation_and_curation/blink.mp4" type="video/mp4">
+                    </video>
+                    <div style="margin-top: 0.5rem; font-size: 0.9em; font-weight: 500; color: #333;">blink</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    @keyframes fadeInImage {
+        from { opacity: 0; transform: scale(0.8); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes slideInArrow {
+        from { opacity: 0; transform: translateX(-50px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes fadeInGraph {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .anim-image.show {
+        animation: fadeInImage 0.8s ease-out forwards;
+    }
+    
+    .anim-arrow.show {
+        animation: slideInArrow 0.8s ease-out forwards;
+    }
+    
+    #graph.show {
+        animation: fadeInGraph 1s ease-out forwards;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let counterInterval;
+        let pointsArray = [];
+        
+        function resetCounter() {
+            const counter = document.getElementById('counter');
+            const canvas = document.getElementById('pointsCanvas');
+            
+            counter.textContent = '0';
+            counter.style.color = '#dc3232'; // Reset to red
+            
+            // Clear all points
+            pointsArray = [];
+            const existingPoints = canvas.querySelectorAll('circle');
+            existingPoints.forEach(point => point.remove());
+        }
+        
+        function addPoint(x, y, color) {
+            const canvas = document.getElementById('pointsCanvas');
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', x);
+            circle.setAttribute('cy', y);
+            circle.setAttribute('r', '2');
+            circle.setAttribute('fill', color);
+            circle.setAttribute('opacity', '0.8');
+            canvas.appendChild(circle);
+            pointsArray.push(circle);
+            return circle;
+        }
+        
+        function animateCounter() {
+            const counter = document.getElementById('counter');
+            const targetValue = 24577;
+            const duration = 2000; // 2 seconds
+            const redColor = '#dc3232';
+            let currentValue = 0;
+            let pointsAdded = 0;
+            
+            if (counterInterval) {
+                clearInterval(counterInterval);
+            }
+            
+            // Keep red color throughout counting up
+            counter.style.color = redColor;
+            
+            // Calculate how many points to show (visual representation)
+            const maxPoints = 500; // Visual points, not 1:1 with actual count
+            const pointsPerStep = maxPoints / (duration / 20); // Add points every 20ms
+            
+            counterInterval = setInterval(() => {
+                currentValue += (targetValue / (duration / 20));
+                pointsAdded += pointsPerStep;
+                
+                // Add visual points
+                const pointsToAdd = Math.floor(pointsAdded) - pointsArray.length;
+                for (let i = 0; i < pointsToAdd && pointsArray.length < maxPoints; i++) {
+                    const x = Math.random() * 230 + 10; // Random x between 10-240
+                    const y = Math.random() * 230 + 10; // Random y between 10-240
+                    addPoint(x, y, redColor);
+                }
+                
+                if (currentValue >= targetValue) {
+                    currentValue = targetValue;
+                    counter.textContent = currentValue.toLocaleString();
+                    clearInterval(counterInterval);
+                } else {
+                    counter.textContent = Math.floor(currentValue).toLocaleString();
+                }
+            }, 20);
+        }
+        
+        function interpolateColor(startColor, endColor, progress) {
+            // Convert hex to RGB
+            const start = {
+                r: parseInt(startColor.slice(1, 3), 16),
+                g: parseInt(startColor.slice(3, 5), 16),
+                b: parseInt(startColor.slice(5, 7), 16)
+            };
+            const end = {
+                r: parseInt(endColor.slice(1, 3), 16),
+                g: parseInt(endColor.slice(3, 5), 16),
+                b: parseInt(endColor.slice(5, 7), 16)
+            };
+            
+            const r = Math.round(start.r + (end.r - start.r) * progress);
+            const g = Math.round(start.g + (end.g - start.g) * progress);
+            const b = Math.round(start.b + (end.b - start.b) * progress);
+            
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+        
+        function animateCounterDecrease() {
+            const counter = document.getElementById('counter');
+            const startValue = 24577;
+            const targetValue = 512;
+            const duration = 2500; // 2.5 seconds
+            const startColor = '#dc3232'; // Red
+            const endColor = '#32dc32'; // Green
+            let currentValue = startValue;
+            let step = 0;
+            const totalSteps = 100;
+            const stepDuration = duration / totalSteps;
+            
+            // Calculate how many points to keep (visual)
+            const startPoints = pointsArray.length;
+            const targetPoints = Math.floor((targetValue / startValue) * startPoints);
+            const pointsToRemove = startPoints - targetPoints;
+            
+            if (counterInterval) {
+                clearInterval(counterInterval);
+            }
+            
+            // Shuffle array for random removal
+            const shuffledPoints = [...pointsArray].sort(() => Math.random() - 0.5);
+            let removedCount = 0;
+            
+            counterInterval = setInterval(() => {
+                step++;
+                currentValue -= ((startValue - targetValue) / totalSteps);
+                const progress = step / totalSteps;
+                
+                // Calculate color transition
+                const currentColor = interpolateColor(startColor, endColor, progress);
+                
+                // Randomly remove points
+                const pointsToRemoveThisStep = Math.floor((pointsToRemove / totalSteps) * step) - removedCount;
+                for (let i = 0; i < pointsToRemoveThisStep && removedCount < pointsToRemove && shuffledPoints.length > 0; i++) {
+                    const pointToRemove = shuffledPoints.pop();
+                    if (pointToRemove && pointToRemove.parentNode) {
+                        pointToRemove.remove();
+                        const index = pointsArray.indexOf(pointToRemove);
+                        if (index > -1) {
+                            pointsArray.splice(index, 1);
+                        }
+                        removedCount++;
+                    }
+                }
+                
+                // Update remaining points color
+                pointsArray.forEach(point => {
+                    point.setAttribute('fill', currentColor);
+                });
+                
+                if (currentValue <= targetValue || step >= totalSteps) {
+                    currentValue = targetValue;
+                    counter.textContent = currentValue.toLocaleString();
+                    counter.style.color = endColor;
+                    // Remove any remaining points beyond target
+                    while (pointsArray.length > targetPoints && shuffledPoints.length > 0) {
+                        const pointToRemove = shuffledPoints.pop();
+                        if (pointToRemove && pointToRemove.parentNode) {
+                            pointToRemove.remove();
+                            const index = pointsArray.indexOf(pointToRemove);
+                            if (index > -1) {
+                                pointsArray.splice(index, 1);
+                            }
+                        }
+                    }
+                    // Update final color
+                    pointsArray.forEach(point => {
+                        point.setAttribute('fill', endColor);
+                    });
+                    clearInterval(counterInterval);
+                } else {
+                    counter.textContent = Math.floor(currentValue).toLocaleString();
+                    counter.style.color = currentColor;
+                }
+            }, stepDuration);
+        }
+        
+        function startAnimation() {
+            const image1 = document.getElementById('image1');
+            const arrow1 = document.getElementById('arrow1');
+            const image2 = document.getElementById('image2');
+            const arrow2 = document.getElementById('arrow2');
+            const image3 = document.getElementById('image3');
+            const graph = document.getElementById('graph');
+            const imageBox = document.getElementById('imageBox');
+            const cornerImage1 = document.getElementById('cornerImage1');
+            const cornerImage2 = document.getElementById('cornerImage2');
+            const cornerImage3 = document.getElementById('cornerImage3');
+            const cornerImage4 = document.getElementById('cornerImage4');
+            const experimentSubtitle = document.getElementById('experimentSubtitle');
+            const video1 = document.getElementById('video1');
+            const video2 = document.getElementById('video2');
+            const video3 = document.getElementById('video3');
+            const video4 = document.getElementById('video4');
+            
+            // Reset all elements
+            image1.classList.remove('show');
+            arrow1.classList.remove('show');
+            image2.classList.remove('show');
+            arrow2.classList.remove('show');
+            image3.classList.remove('show');
+            graph.classList.remove('show');
+            image1.style.opacity = '0';
+            arrow1.style.opacity = '0';
+            image2.style.opacity = '0';
+            arrow2.style.opacity = '0';
+            image3.style.opacity = '0';
+            graph.style.opacity = '0';
+            imageBox.style.opacity = '1';
+            imageBox.style.display = 'block';
+            graph.style.transform = 'translateX(0)';
+            cornerImage1.style.opacity = '0';
+            cornerImage2.style.opacity = '0';
+            cornerImage3.style.opacity = '0';
+            cornerImage4.style.opacity = '0';
+            experimentSubtitle.textContent = 'Stage 1: Generation';
+            experimentSubtitle.style.opacity = '1';
+            
+            // Reset videos
+            if (video1) {
+                video1.pause();
+                video1.currentTime = 0;
+            }
+            if (video2) {
+                video2.pause();
+                video2.currentTime = 0;
+            }
+            if (video3) {
+                video3.pause();
+                video3.currentTime = 0;
+            }
+            if (video4) {
+                video4.pause();
+                video4.currentTime = 0;
+            }
+            
+            // Show first image
+            setTimeout(() => {
+                image1.classList.add('show');
+            }, 100);
+            
+            // Show first arrow after first image
+            setTimeout(() => {
+                arrow1.classList.add('show');
+            }, 1000);
+            
+            // Show second image after first arrow
+            setTimeout(() => {
+                image2.classList.add('show');
+            }, 1900);
+            
+            // Show second arrow after second image
+            setTimeout(() => {
+                arrow2.classList.add('show');
+            }, 2800);
+            
+            // Show third image after second arrow
+            setTimeout(() => {
+                image3.classList.add('show');
+            }, 3700);
+            
+            // Show graph with counter at 0
+            setTimeout(() => {
+                resetCounter();
+                graph.classList.add('show');
+                setTimeout(animateCounter, 800); // Wait for graph to appear before counting
+            }, 4600);
+            
+            // After counter finishes (2 seconds), fade out image box and move graph
+            setTimeout(() => {
+                imageBox.style.opacity = '0';
+                setTimeout(() => {
+                    imageBox.style.display = 'none';
+                }, 800);
+                // Start moving graph and changing subtitle smoothly
+                setTimeout(() => {
+                    // Fade out subtitle
+                    experimentSubtitle.style.opacity = '0';
+                    // Start graph movement (1 second slide)
+                    graph.style.transform = 'translateX(-400px)';
+                    // Change subtitle text and fade in after a brief delay
+                    setTimeout(() => {
+                        experimentSubtitle.textContent = 'Stage 2: Filtering';
+                        experimentSubtitle.style.opacity = '1';
+                    }, 400); // Change subtitle during the graph slide
+                }, 400);
+            }, 7900); // 4600 (graph appears) + 800 (counter starts) + 2000 (counter duration) + 500 (pause)
+            
+            // Show corner videos after graph finishes moving (1 second slide)
+            setTimeout(() => {
+                cornerImage1.style.opacity = '1';
+                if (video1) {
+                    video1.play().catch(e => console.log('Video play error:', e));
+                }
+            }, 9400); // 7900 + 400 (start delay) + 1000 (slide duration) + 100 (buffer)
+            
+            setTimeout(() => {
+                cornerImage2.style.opacity = '1';
+                if (video2) {
+                    video2.play().catch(e => console.log('Video play error:', e));
+                }
+            }, 9700);
+            
+            setTimeout(() => {
+                cornerImage3.style.opacity = '1';
+                if (video3) {
+                    video3.play().catch(e => console.log('Video play error:', e));
+                }
+            }, 10000);
+            
+            setTimeout(() => {
+                cornerImage4.style.opacity = '1';
+                if (video4) {
+                    video4.play().catch(e => console.log('Video play error:', e));
+                }
+            }, 10300);
+            
+            // After all corner images appear, decrease counter and turn red
+            setTimeout(() => {
+                animateCounterDecrease();
+            }, 11000); // Wait a bit after last corner image
+            
+            // Restart animation
+            setTimeout(startAnimation, 16000);
+        }
+        
+        startAnimation();
+    });
+</script>
+
+<!-- Expression Change Section -->
+<section class="section hero is-small">
+    <div class="hero-body">
+    <div class="container is-max-widescreen">
+            <h2 class="title is-3 has-text-centered">Expression Change</h2>
+            <p class="subtitle has-text-centered" style="margin-top: 1rem;">
+                Sync-LoRA enables synchronized facial expression modifications while preserving identity
+            </p>
+            
+            <!-- Column Headers -->
+            <div style="display: flex; margin-bottom: 0.5rem; margin-top: 2rem; justify-content: center;">
+                <div style="width: 24.5%; text-align: center;">
+                    <p style="font-weight: bold; font-size: 1.1em;">Source</p>
+                </div>
+                <div style="width: 1.5%;"></div>
+                <div style="width: 74%; text-align: center; display: flex; justify-content: space-around;">
+                    <p style="font-weight: bold; font-size: 1.1em;">Happy</p>
+                    <p style="font-weight: bold; font-size: 1.1em;">Angry</p>
+                    <p style="font-weight: bold; font-size: 1.1em;">Sad</p>
+                </div>
+            </div>
+            
+            <!-- Carousel -->
+            <div id="expression-change-carousel" class="carousel results-carousel">
+                <div class="column is-centered has-text-centered">
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/expression_concat/glasses_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/expression_concat/justin_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/expression_concat/mask_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/expression_concat/sticky_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/expression_concat/the_rock_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="column is-centered has-text-centered">
+                    <video poster="" autoplay muted loop playsinline style="width: 100%;">
+                        <source src="./assets/expression_concat/trump_concat.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+    </div>
+  </div>
+</section>
+
+<!-- Supplementary Material Section -->
+<section class="section hero is-light">
+    <div class="hero-body">
+        <div class="container is-max-widescreen">
+            <h2 class="title is-3 has-text-centered">Supplementary Material</h2>
+            
+            <!-- Expression Modification Comparison -->
+            <div style="margin-top: 4rem;">
+                <h3 class="title is-4 has-text-centered" style="margin-bottom: 0.5rem;">Expression Modification Comparison</h3>
+                
+                <!-- Column labels -->
+                <div style="display: flex; justify-content: center; margin-bottom: 0.5rem;">
+                    <div style="width: 70%; max-width: 800px; display: flex;">
+                        <div style="flex: 1; text-align: center; font-size: 0.9em; font-weight: 500;">Source</div>
+                        <div style="flex: 1; text-align: center; font-size: 0.9em; font-weight: 500;">LivePortrait</div>
+                        <div style="flex: 1; text-align: center; font-size: 0.9em; font-weight: bold;">Sync-LoRA</div>
+                    </div>
+                </div>
+                
+                <!-- Carousel -->
+                <div id="expression-carousel" class="carousel results-carousel">
+                    <div class="column is-centered has-text-centered">
+                        <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ happy"</p>
+                        <video poster="" autoplay muted loop playsinline style="width: 70%;">
+                            <source src="./assets/compare/expressions/happy1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="column is-centered has-text-centered">
+                        <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ angry"</p>
+                        <video poster="" autoplay muted loop playsinline style="width: 70%;">
+                            <source src="./assets/compare/expressions/angry1.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="column is-centered has-text-centered">
+                        <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ happy"</p>
+                        <video poster="" autoplay muted loop playsinline style="width: 70%;">
+                            <source src="./assets/compare/expressions/happy2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="column is-centered has-text-centered">
+                        <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ angry"</p>
+                        <video poster="" autoplay muted loop playsinline style="width: 70%;">
+                            <source src="./assets/compare/expressions/angry2.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="column is-centered has-text-centered">
+                        <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ happy"</p>
+                        <video poster="" autoplay muted loop playsinline style="width: 70%;">
+                            <source src="./assets/compare/expressions/happy3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="column is-centered has-text-centered">
+                        <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ angry"</p>
+                        <video poster="" autoplay muted loop playsinline style="width: 70%;">
+                            <source src="./assets/compare/expressions/angry3.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="column is-centered has-text-centered">
+                        <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ happy"</p>
+                        <video poster="" autoplay muted loop playsinline style="width: 70%;">
+                            <source src="./assets/compare/expressions/happy4.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="column is-centered has-text-centered">
+                        <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ angry"</p>
+                        <video poster="" autoplay muted loop playsinline style="width: 70%;">
+                            <source src="./assets/compare/expressions/angry4.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="column is-centered has-text-centered">
+                        <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ happy"</p>
+                        <video poster="" autoplay muted loop playsinline style="width: 70%;">
+                            <source src="./assets/compare/expressions/happy5.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ablation Study -->
+            <div style="margin-top: 4rem;">
+                <h3 class="title is-4 has-text-centered" style="margin-bottom: 2rem;">Ablation Study</h3>
+                
+                <!-- Necessity of all synchronization cues -->
+                <div style="margin-bottom: 3rem;">
+                    <h4 class="title is-5 has-text-centered" style="margin-bottom: 0.5rem;">Necessity of all synchronization cues</h4>
+                    
+                    <!-- Column labels -->
+                    <div style="display: flex; justify-content: center; margin-bottom: 0.5rem;">
+                        <div style="width: 90%; max-width: 1100px; display: flex;">
+                            <div style="flex: 1; text-align: center; font-size: 0.85em; font-weight: 500;">Source</div>
+                            <div style="flex: 1; text-align: center; font-size: 0.85em; font-weight: 500;">w/o pose</div>
+                            <div style="flex: 1; text-align: center; font-size: 0.85em; font-weight: 500;">w/o gaze</div>
+                            <div style="flex: 1; text-align: center; font-size: 0.85em; font-weight: 500;">w/o speech</div>
+                            <div style="flex: 1; text-align: center; font-size: 0.85em; font-weight: 500;">w/o blink</div>
+                            <div style="flex: 1; text-align: center; font-size: 0.85em; font-weight: bold;">Ours</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Carousel -->
+                    <div id="ablation-cues-carousel" class="carousel results-carousel">
+                        <div class="column is-centered has-text-centered">
+                            <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ beard"</p>
+                            <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                                <source src="./assets/ablations/all_cues_add_beard.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="column is-centered has-text-centered">
+                            <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"- headset"</p>
+                            <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                                <source src="./assets/ablations/all_cues_remove_headset.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Effect of dataset composition strategy -->
+                <div style="margin-bottom: 3rem;">
+                    <h4 class="title is-5 has-text-centered" style="margin-bottom: 0.5rem;">Effect of dataset composition strategy</h4>
+                    
+                    <!-- Column labels -->
+                    <div style="display: flex; justify-content: center; margin-bottom: 0.5rem;">
+                        <div style="width: 90%; max-width: 1100px; display: flex;">
+                            <div style="flex: 1; text-align: center; font-size: 0.85em; font-weight: 500;">Source</div>
+                            <div style="flex: 1; text-align: center; font-size: 0.85em; font-weight: 500;">ID-Only</div>
+                            <div style="flex: 1; text-align: center; font-size: 0.85em; font-weight: 500;">Edit-Only</div>
+                            <div style="flex: 1; text-align: center; font-size: 0.85em; font-weight: 500;">Random</div>
+                            <div style="flex: 1; text-align: center; font-size: 0.85em; font-weight: bold;">Ours</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Carousel -->
+                    <div id="ablation-dataset-carousel" class="carousel results-carousel">
+                        <div class="column is-centered has-text-centered">
+                            <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"+ scarf"</p>
+                            <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                                <source src="./assets/ablations/baselines_scarf.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="column is-centered has-text-centered">
+                            <p style="font-weight: 600; font-style: italic; margin-bottom: 0.5rem;">"Batman to Joker"</p>
+                            <video poster="" autoplay muted loop playsinline style="width: 90%;">
+                                <source src="./assets/ablations/baselines_batman_to_joker.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Limitations and Failure Cases -->
+            <div style="margin-top: 4rem;">
+                <h3 class="title is-4 has-text-centered" style="margin-bottom: 2rem;">Limitations and Failure Cases</h3>
+                
+                <!-- Video Row 1 -->
+                <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem; justify-content: center;">
+                    <div style="max-width: 800px; flex: 0 1 auto;">
+                        <!-- Title -->
+                        <div style="text-align: center; margin-bottom: 1rem; font-weight: 600; font-size: 1.1em;">Misalignment</div>
+                        <!-- Labels above video -->
+                        <div style="display: flex; justify-content: space-around; margin-bottom: 0.5rem;">
+                            <div style="font-weight: 500; flex: 1; text-align: center;">Source</div>
+                            <div style="font-weight: 500; flex: 1; text-align: center;">Edited</div>
+                        </div>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%; max-height: 600px; object-fit: contain;">
+                            <source src="./assets/failures/fail_misalignment.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                
+                <!-- Video Row 3 -->
+                <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem; justify-content: center;">
+                    <div style="max-width: 800px; flex: 0 1 auto;">
+                        <!-- Title -->
+                        <div style="text-align: center; margin-bottom: 1rem; font-weight: 600; font-size: 1.1em;">Rapid Motion</div>
+                        <!-- Labels above video -->
+                        <div style="display: flex; justify-content: space-around; margin-bottom: 0.5rem;">
+                            <div style="font-weight: 500; flex: 1; text-align: center;">Source</div>
+                            <div style="font-weight: 500; flex: 1; text-align: center;">Edited</div>
+                        </div>
+                        <video poster="" autoplay muted loop playsinline style="width: 100%; max-height: 600px; object-fit: contain;">
+                            <source src="./assets/failures/fail_rapid.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Curation Filtering - Representatives -->
+            <div style="margin-top: 4rem;">
+                <h3 class="title is-4 has-text-centered" style="margin-bottom: 2rem;">Data Curation Filtering - Representatives</h3>
+                
+                <!-- Accepted Examples -->
+                <div style="margin-bottom: 3rem;">
+                    <h4 class="title is-5 has-text-centered" style="margin-bottom: 1.5rem; color: #32dc32;">✅ Accepted</h4>
+                    <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+                        <div style="max-width: 500px;">
+                            <video poster="" autoplay muted loop playsinline style="width: 100%; max-height: 400px; object-fit: contain;">
+                                <source src="./assets/filter_examples/filter_acc1.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div style="max-width: 500px;">
+                            <video poster="" autoplay muted loop playsinline style="width: 100%; max-height: 400px; object-fit: contain;">
+                                <source src="./assets/filter_examples/filter_acc2.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rejected Examples -->
+                <div>
+                    <h4 class="title is-5 has-text-centered" style="margin-bottom: 1.5rem; color: #dc3232;">❌ Rejected</h4>
+                    <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+                        <div style="max-width: 500px;">
+                            <video poster="" autoplay muted loop playsinline style="width: 100%; max-height: 400px; object-fit: contain;">
+                                <source src="./assets/filter_examples/filter_rej1.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div style="max-width: 500px;">
+                            <video poster="" autoplay muted loop playsinline style="width: 100%; max-height: 400px; object-fit: contain;">
+                                <source src="./assets/filter_examples/filter_rej2.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Thank You Section -->
+<section class="section" style="padding: 3rem 1.5rem;">
+    <div class="container">
+        <h2 class="title is-3 has-text-centered" style="color: #363636;">Thank You</h2>
+        <div style="text-align: center; margin-top: 2rem;">
+            <img src="./assets/the_end.gif" alt="The End" style="max-width: 500px; width: 100%; height: auto;">
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
