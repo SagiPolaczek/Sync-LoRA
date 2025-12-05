@@ -11,7 +11,7 @@
 
 ## 📰 News
 
-- **[Dec 4, 2024]** Paper and project page released!
+- **[Dec 4, 2025]** Paper and project page released!
 
 ## Abstract
 
