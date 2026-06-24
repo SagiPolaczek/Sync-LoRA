@@ -3,6 +3,8 @@
 <p align="center">
   <a href="http://arxiv.org/abs/2512.03013"><img src="https://img.shields.io/badge/arXiv-2512.03013-b31b1b.svg" alt="arXiv"></a>
   <a href="https://sagipolaczek.github.io/Sync-LoRA/"><img src="https://img.shields.io/badge/Project-Page-blue.svg" alt="Project Page"></a>
+  <a href="https://huggingface.co/SagiPolaczek/LTX-2.3-Sync-LoRA"><img src="https://img.shields.io/badge/🤗%20HuggingFace-Model-yellow.svg" alt="Model"></a>
+  <a href="https://huggingface.co/datasets/SagiPolaczek/sync-lora"><img src="https://img.shields.io/badge/🤗%20HuggingFace-Dataset-green.svg" alt="Dataset"></a>
 </p>
 
 <p align="center">
